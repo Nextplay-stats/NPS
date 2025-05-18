@@ -1,1 +1,32 @@
+<script src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
+<script>
+  const msalConfig = {
+    auth: {
+      clientId: "YOUR_CLIENT_ID",
+      authority: "https://login.microsoftonline.com/common", // Use tenant-specific if you want
+      redirectUri: "https://ambitious-water-0dda8d803.6.azurestaticapps.net",
+    }
+  };
+
+  const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+  async function signIn() {
+    try {
+      const response = await msalInstance.loginPopup({
+        scopes: ["openid", "profile", "email"]
+      });
+      const user = response.account;
+      document.getElementById("output").innerText = `Welcome ${user.username}`;
+      
+      // Logic to redirect based on group
+      const domainGroup = user.username.split('@')[0]; // Or map groups
+      window.location.href = `/groups/${domainGroup}.html`;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+</script>
+
+<button onclick="signIn()">Sign In with Microsoft</button>
+<div id="output"></div>
 
