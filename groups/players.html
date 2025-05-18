@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Player Page</title>
+  <title>Players Page</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -23,12 +22,42 @@
     .card h1 {
       color: #2c3e50;
     }
+    .signout-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .signout-button:hover {
+      background-color: #c0392b;
+    }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>Welcome, Player!</h1>
-    <p>You have full access to manage users, view analytics, and modify settings.</p>
+    <p>You have barely any access view analytics.</p>
+    <button class="signout-button" onclick="signOut()">Sign Out</button>
   </div>
+
+  <script src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
+  <script>
+    const msalConfig = {
+      auth: {
+        clientId: "c4d18c3f-5c5d-4a64-811f-809f0bb50667",
+        authority: "https://login.microsoftonline.com/ae49937b-e6e5-4c58-a720-c3d7ebd7f665",
+        redirectUri: "https://ambitious-water-0dda8d803.6.azurestaticapps.net"
+      }
+    };
+
+    const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+    function signOut() {
+      msalInstance.logoutRedirect();
+    }
+  </script>
 </body>
 </html>
