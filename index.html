@@ -39,7 +39,8 @@
         document.body.innerHTML = "<h2>Access Denied: You are not in an authorized group.</h2>";
       }
     } catch (err) {
-      console.error(err);
+      console.error("Login failed:", err);
+      alert("Login failed. Check the console for more information.");
     }
   }
 </script>
