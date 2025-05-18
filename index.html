@@ -2,9 +2,9 @@
 <script>
   const msalConfig = {
     auth: {
-      clientId: "YOUR_CLIENT_ID",
-      authority: "https://login.microsoftonline.com/common", // Use tenant-specific if you want
-      redirectUri: "https://ambitious-water-0dda8d803.6.azurestaticapps.net",
+      clientId: "c4d18c3f-5c5d-4a64-811f-809f0bb50667",
+      authority: "https://login.microsoftonline.com/common",
+      redirectUri: "https://ambitious-water-0dda8d803.6.azurestaticapps.net"
     }
   };
 
@@ -13,20 +13,35 @@
   async function signIn() {
     try {
       const response = await msalInstance.loginPopup({
-        scopes: ["openid", "profile", "email"]
+        scopes: ["openid", "profile", "email"],
       });
-      const user = response.account;
-      document.getElementById("output").innerText = `Welcome ${user.username}`;
-      
-      // Logic to redirect based on group
-      const domainGroup = user.username.split('@')[0]; // Or map groups
-      window.location.href = `/groups/${domainGroup}.html`;
+
+      const idToken = response.idToken;
+
+      // Decode the JWT (it's just base64)
+      const payload = JSON.parse(atob(idToken.split('.')[1]));
+      const groupIds = payload.groups || [];
+
+      // Map group ID to group name
+      const groupMap = {
+        "0c3a5074-675c-4441-b665-3709f2e389e3": "admin",
+        "92eee0d9-de17-4056-8720-478601a22de1": "coach",
+        "a0b86c5d-544e-4a0d-a10c-b16eac07cf00": "nbl",
+        "bb89a797-92d2-4f1c-be21-8ba5200b427c": "players"
+      };
+
+      const matchedGroupId = groupIds.find(id => groupMap[id]);
+      const groupName = groupMap[matchedGroupId];
+
+      if (groupName) {
+        window.location.href = `/groups/${groupName}.html`;
+      } else {
+        document.body.innerHTML = "<h2>Access Denied: You are not in an authorized group.</h2>";
+      }
     } catch (err) {
       console.error(err);
     }
   }
 </script>
 
-<button onclick="signIn()">Sign In with Microsoft</button>
-<div id="output"></div>
-
+<button onclick="signIn()">Login with Microsoft</button>
