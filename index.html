@@ -14,15 +14,16 @@
     try {
       const response = await msalInstance.loginPopup({
         scopes: ["openid", "profile", "email"],
+        prompt: "select_account" // 👈 forces user to choose account
       });
 
       const idToken = response.idToken;
 
-      // Decode the JWT (it's just base64)
+      // Decode the JWT token payload
       const payload = JSON.parse(atob(idToken.split('.')[1]));
       const groupIds = payload.groups || [];
 
-      // Map group ID to group name
+      // Map of group IDs to group names
       const groupMap = {
         "0c3a5074-675c-4441-b665-3709f2e389e3": "admin",
         "92eee0d9-de17-4056-8720-478601a22de1": "coach",
@@ -42,7 +43,4 @@
       console.error("Login failed:", err);
       alert("Login failed. Check the console for more information.");
     }
-  }
-</script>
 
-<button onclick="signIn()">Login with Microsoft</button>
