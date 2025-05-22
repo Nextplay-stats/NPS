@@ -1,0 +1,25 @@
+{
+  "routes": [
+    {
+      "route": "/groups/admin.html",
+      "allowedRoles": ["admin"]
+    },
+    {
+      "route": "/groups/coach.html",
+      "allowedRoles": ["coach"]
+    },
+    {
+      "route": "/groups/nbl.html",
+      "allowedRoles": ["nbl"]
+    },
+    {
+      "route": "/groups/players.html",
+      "allowedRoles": ["players"]
+    },
+    {
+      "route": "/groups/*",
+      "statusCode": 403,
+      "serve": "/unauthorized.html"
+    }
+  ]
+}
